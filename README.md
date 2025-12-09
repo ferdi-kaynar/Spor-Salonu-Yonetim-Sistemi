@@ -1,4 +1,4 @@
-# FitLife Spor Salonu Yönetim Sistemi
+# Kaynar Spor Salonu Yönetim Sistemi
 
 ASP.NET Core MVC ile geliştirilmiş spor salonu yönetim ve randevu sistemi.
 
