@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="jumbotron bg-primary text-white p-5 rounded">
+    <h1 class="display-4">Kaynar Spor Salonu'na Hoş Geldiniz!</h1>
+    <p class="lead">Sağlıklı yaşam için en iyi adres. Profesyonel antrenörler, modern ekipmanlar ve kişiye özel programlarla hedeflerinize ulaşın.</p>
+    <hr class="my-4 bg-white">
+    <p>Hemen üye olun ve ilk randevunuzu alın!</p>
+    <div class="d-flex gap-2">
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a class="btn btn-light btn-lg" asp-controller="Randevu" asp-action="Create" role="button">
+                <i class="bi bi-calendar-plus"></i> Randevu Al
+            </a>
+            <a class="btn btn-outline-light btn-lg" asp-controller="AI" asp-action="Index" role="button">
+                <i class="bi bi-robot"></i> AI Egzersiz Önerisi
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-light btn-lg" asp-controller="Account" asp-action="Register" role="button">
+                <i class="bi bi-person-plus"></i> Kayıt Ol
+            </a>
+            <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Login" role="button">
+                <i class="bi bi-box-arrow-in-right"></i> Giriş Yap
+            </a>
+            <a class="btn btn-success btn-lg" asp-controller="Trainer" asp-action="Login" role="button">
+                <i class="bi bi-person-workspace"></i> Eğitmen Girişi
+            </a>
+            <a class="btn btn-warning btn-lg" asp-controller="Admin" asp-action="Login" role="button">
+                <i class="bi bi-shield-lock"></i> Admin Girişi
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-people-fill text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Uzman Antrenörler</h5>
+                <p class="card-text">Alanında uzman ve sertifikalı antrenörlerimiz sizin için en uygun programları hazırlar.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-gear-fill text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Modern Ekipmanlar</h5>
+                <p class="card-text">En son teknoloji fitness ekipmanları ile konforlu ve etkili antrenmanlar yapın.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-robot text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Kişisel Antrenman</h5>
+                <p class="card-text">Uzman antrenörlerimizle kişiye özel programlar ve beslenme danışmanlığı.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-list-check"></i> Hizmetlerimiz</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Fitness Antrenmanı</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Kişisel Antrenörlük</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Yoga ve Pilates</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Grup Dersleri</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Beslenme Danışmanlığı</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Rehabilitasyon Programları</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-clock-fill"></i> Çalışma Saatlerimiz</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Hafta İçi:</strong> 06:00 - 23:00</p>
+                <p><strong>Cumartesi:</strong> 08:00 - 22:00</p>
+                <p><strong>Pazar:</strong> 09:00 - 20:00</p>
+                <hr>
+                <p><i class="bi bi-geo-alt-fill text-danger"></i> <strong>Adres:</strong> Sakarya Üniversitesi Kampüsü</p>
+                <p><i class="bi bi-telephone-fill text-success"></i> <strong>Telefon:</strong> 0264-123-4567</p>
+            </div>
+        </div>
+    </div>
+</div>

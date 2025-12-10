@@ -1,0 +1,324 @@
+@model IEnumerable<FitnessSalonYonetim.Models.Randevu>
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<!-- Bildirimler -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<h1 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
+
+<!-- İstatistik Kartları (Üst Sıra) -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-uppercase">Toplam Salon</h6>
+                        <h2 class="mb-0">@ViewBag.ToplamSalon</h2>
+                    </div>
+                    <i class="bi bi-building" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-uppercase">Toplam Antrenör</h6>
+                        <h2 class="mb-0">@ViewBag.ToplamAntrenor</h2>
+                    </div>
+                    <i class="bi bi-people" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-uppercase">Toplam Üye</h6>
+                        <h2 class="mb-0">@ViewBag.ToplamUye</h2>
+                    </div>
+                    <i class="bi bi-person-badge" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-secondary text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-uppercase">Toplam Randevu</h6>
+                        <h2 class="mb-0">@ViewBag.ToplamRandevu</h2>
+                    </div>
+                    <i class="bi bi-calendar-check" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Randevu Durum İstatistikleri (Alt Sıra) -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-warning text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-uppercase">Bekleyen Randevular</h6>
+                        <h2 class="mb-0">@ViewBag.BekleyenRandevuSayisi</h2>
+                    </div>
+                    <i class="bi bi-clock-history" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-uppercase">Onaylanan Randevular</h6>
+                        <h2 class="mb-0">@ViewBag.OnaylananRandevuSayisi</h2>
+                    </div>
+                    <i class="bi bi-check-circle" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-uppercase">Tamamlanan Randevular</h6>
+                        <h2 class="mb-0">@ViewBag.TamamlananRandevuSayisi</h2>
+                    </div>
+                    <i class="bi bi-check2-all" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bekleyen Randevular -->
+@{
+    var bekleyenRandevularList = ViewBag.BekleyenRandevularList as List<FitnessSalonYonetim.Models.Randevu>;
+}
+@if (bekleyenRandevularList != null && bekleyenRandevularList.Any())
+{
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow border-warning">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Onay Bekleyen Randevular</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Saat</th>
+                                    <th>Üye</th>
+                                    <th>Antrenör</th>
+                                    <th>Hizmet</th>
+                                    <th>Ücret</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var randevu in bekleyenRandevularList)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@randevu.RandevuTarihi.ToString("dd MMM yyyy")</strong>
+                                            <br />
+                                            <small class="text-muted">@randevu.RandevuTarihi.ToString("dddd")</small>
+                                        </td>
+                                        <td><strong>@randevu.BaslangicSaati.ToString(@"hh\:mm") - @randevu.BitisSaati.ToString(@"hh\:mm")</strong></td>
+                                        <td>
+                                            @randevu.Uye.AdSoyad
+                                            <br />
+                                            <small class="text-muted">@randevu.Uye.Email</small>
+                                        </td>
+                                        <td>
+                                            @randevu.Antrenor.AdSoyad
+                                            <br />
+                                            <small class="text-muted">@randevu.Antrenor.UzmanlikAlanlari</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info">@randevu.Hizmet.Ad</span>
+                                            <br />
+                                            <small class="text-muted">@randevu.Hizmet.Sure dk</small>
+                                        </td>
+                                        <td><strong>@randevu.Ucret.ToString("C")</strong></td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <form asp-controller="Randevu" asp-action="Onayla" asp-route-id="@randevu.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-success" 
+                                                            onclick="return confirm('Bu randevuyu onaylamak istediğinize emin misiniz?')"
+                                                            title="Onayla">
+                                                        <i class="bi bi-check-circle"></i>
+                                                    </button>
+                                                </form>
+                                                <form asp-controller="Randevu" asp-action="Reddet" asp-route-id="@randevu.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                                            onclick="return confirm('Bu randevuyu reddetmek istediğinize emin misiniz?')"
+                                                            title="Reddet">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </button>
+                                                </form>
+                                                <a asp-controller="Randevu" asp-action="Details" asp-route-id="@randevu.Id" class="btn btn-sm btn-info" title="Detaylar">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-calendar3"></i> Son Randevular</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Saat</th>
+                                    <th>Üye</th>
+                                    <th>Antrenör</th>
+                                    <th>Hizmet</th>
+                                    <th>Durum</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var randevu in Model)
+                                {
+                                    <tr>
+                                        <td>@randevu.RandevuTarihi.ToShortDateString()</td>
+                                        <td>@randevu.BaslangicSaati.ToString(@"hh\:mm")</td>
+                                        <td>@randevu.Uye.AdSoyad</td>
+                                        <td>@randevu.Antrenor.AdSoyad</td>
+                                        <td>@randevu.Hizmet.Ad</td>
+                                        <td>
+                                            @switch (randevu.Durum)
+                                            {
+                                                case FitnessSalonYonetim.Models.RandevuDurumu.Beklemede:
+                                                    <span class="badge bg-warning">Beklemede</span>
+                                                    break;
+                                                case FitnessSalonYonetim.Models.RandevuDurumu.Onaylandi:
+                                                    <span class="badge bg-success">Onaylandı</span>
+                                                    break;
+                                                case FitnessSalonYonetim.Models.RandevuDurumu.Reddedildi:
+                                                    <span class="badge bg-danger">Reddedildi</span>
+                                                    break;
+                                                case FitnessSalonYonetim.Models.RandevuDurumu.Tamamlandi:
+                                                    <span class="badge bg-info">Tamamlandı</span>
+                                                    break;
+                                                case FitnessSalonYonetim.Models.RandevuDurumu.IptalEdildi:
+                                                    <span class="badge bg-secondary">İptal Edildi</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td>
+                                            <a asp-controller="Randevu" asp-action="Details" asp-route-id="@randevu.Id" class="btn btn-sm btn-info">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center py-3">Henüz randevu bulunmamaktadır.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Hızlı Erişim</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a asp-controller="Salon" asp-action="Index" class="btn btn-outline-primary w-100 py-3">
+                            <i class="bi bi-building" style="font-size: 2rem;"></i>
+                            <div class="mt-2">Salon Yönetimi</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a asp-controller="Admin" asp-action="Egitmenler" class="btn btn-outline-success w-100 py-3">
+                            <i class="bi bi-people" style="font-size: 2rem;"></i>
+                            <div class="mt-2">Eğitmen Yönetimi</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a asp-controller="Admin" asp-action="Uyeler" class="btn btn-outline-info w-100 py-3">
+                            <i class="bi bi-person-badge" style="font-size: 2rem;"></i>
+                            <div class="mt-2">Üye Yönetimi</div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a asp-controller="Hizmet" asp-action="Index" class="btn btn-outline-secondary w-100 py-3">
+                            <i class="bi bi-gear" style="font-size: 2rem;"></i>
+                            <div class="mt-2">Hizmet Yönetimi</div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a asp-controller="Randevu" asp-action="Index" class="btn btn-outline-warning w-100 py-3">
+                            <i class="bi bi-calendar-check" style="font-size: 2rem;"></i>
+                            <div class="mt-2">Randevu Yönetimi</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

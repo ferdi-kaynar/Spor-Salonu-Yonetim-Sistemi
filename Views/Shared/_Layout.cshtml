@@ -1,0 +1,162 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using FitnessSalonYonetim.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Kaynar Spor Salonu</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-lightning-charge-fill"></i> Kaynar Spor Salonu
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @if (User.IsInRole("Trainer"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-person-workspace"></i> Eğitmen Paneli
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-controller="Trainer" asp-action="Dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" asp-controller="Trainer" asp-action="Randevular"><i class="bi bi-calendar3"></i> Randevularım</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Trainer" asp-action="Uyeler"><i class="bi bi-people"></i> Üyelerim</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Trainer" asp-action="Musaitlikler"><i class="bi bi-calendar-week"></i> Müsaitliklerim</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Trainer" asp-action="Profil"><i class="bi bi-person"></i> Profilim</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else if (!User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Randevu" asp-action="Index">Randevularım</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Randevu" asp-action="Create">Randevu Al</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="AI" asp-action="Index">AI Egzersiz Önerisi</a>
+                                </li>
+                            }
+                            
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-shield-lock"></i> Admin Panel
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Egitmenler"><i class="bi bi-people"></i> Eğitmen Yönetimi</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Uyeler"><i class="bi bi-person-badge"></i> Üye Yönetimi</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" asp-controller="Salon" asp-action="Index"><i class="bi bi-building"></i> Salon Yönetimi</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Hizmet" asp-action="Index"><i class="bi bi-gear"></i> Hizmet Yönetimi</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Randevu" asp-action="Index"><i class="bi bi-calendar-check"></i> Randevular</a></li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            var user = await UserManager.GetUserAsync(User);
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle"></i> @user?.AdSoyad
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profil</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Çıkış Yap</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register"><i class="bi bi-person-plus"></i> Kayıt Ol</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login"><i class="bi bi-box-arrow-in-right"></i> Giriş Yap</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="container mt-3">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="container mt-3">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+
+    <main class="container my-4">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-light mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 Kaynar Spor Salonu - Tüm Hakları Saklıdır</p>
+            <p class="text-muted small">Web Programlama Dersi Projesi</p>
+            @if (!User.IsInRole("Admin") && !Context.Request.Path.StartsWithSegments("/Admin/Login"))
+            {
+                <p class="mt-2">
+                    <small>
+                        <a asp-controller="Admin" asp-action="Login" class="text-decoration-none text-muted">
+                            <i class="bi bi-shield-lock"></i> Admin Girişi
+                        </a>
+                    </small>
+                </p>
+            }
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

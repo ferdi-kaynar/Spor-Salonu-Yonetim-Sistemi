@@ -1,0 +1,238 @@
+@model FitnessSalonYonetim.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Üye Detayları";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-person-circle"></i> Üye Detayları</h1>
+        <a asp-action="Uyeler" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Üye Listesine Dön
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person"></i> Kişisel Bilgiler</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center text-white" style="width: 100px; height: 100px; font-size: 3rem;">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    </div>
+                    <h4 class="text-center mb-3">@Model.AdSoyad</h4>
+                    
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>Üye ID:</strong></td>
+                            <td><code>@Model.Id</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email:</strong></td>
+                            <td>@Model.Email</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kullanıcı Adı:</strong></td>
+                            <td>@Model.UserName</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Telefon:</strong></td>
+                            <td>@(Model.PhoneNumber ?? "-")</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Doğum Tarihi:</strong></td>
+                            <td>
+                                @if (Model.DogumTarihi.HasValue)
+                                {
+                                    @Model.DogumTarihi.Value.ToShortDateString()
+                                    <br />
+                                    <small class="text-muted">(@((DateTime.Now.Year - Model.DogumTarihi.Value.Year)) yaş)</small>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Belirtilmemiş</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cinsiyet:</strong></td>
+                            <td>@(Model.Cinsiyet ?? "-")</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Boy:</strong></td>
+                            <td>@(Model.Boy.HasValue ? Model.Boy + " cm" : "-")</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kilo:</strong></td>
+                            <td>@(Model.Kilo.HasValue ? Model.Kilo + " kg" : "-")</td>
+                        </tr>
+                        @if (Model.Boy.HasValue && Model.Kilo.HasValue)
+                        {
+                            var boyM = Model.Boy.Value / 100.0;
+                            var bmi = (double)Model.Kilo.Value / (boyM * boyM);
+                            <tr>
+                                <td><strong>BMI:</strong></td>
+                                <td>
+                                    <strong>@bmi.ToString("F1")</strong>
+                                    <br />
+                                    <small class="text-muted">
+                                        @if (bmi < 18.5)
+                                        {
+                                            <span class="badge bg-info">Zayıf</span>
+                                        }
+                                        else if (bmi < 25)
+                                        {
+                                            <span class="badge bg-success">Normal</span>
+                                        }
+                                        else if (bmi < 30)
+                                        {
+                                            <span class="badge bg-warning">Kilolu</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Obez</span>
+                                        }
+                                    </small>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td><strong>Adres:</strong></td>
+                            <td>@(Model.Adres ?? "-")</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kayıt Tarihi:</strong></td>
+                            <td>
+                                @Model.KayitTarihi.ToString("dd.MM.yyyy HH:mm")
+                                <br />
+                                <small class="text-muted">(@((DateTime.Now - Model.KayitTarihi).Days) gün önce)</small>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Randevu Geçmişi (@Model.Randevular.Count)</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Randevular.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Tarih</th>
+                                        <th>Saat</th>
+                                        <th>Eğitmen</th>
+                                        <th>Hizmet</th>
+                                        <th>Durum</th>
+                                        <th>Oluşturulma</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var randevu in Model.Randevular.OrderByDescending(r => r.RandevuTarihi))
+                                    {
+                                        <tr>
+                                            <td>@randevu.RandevuTarihi.ToShortDateString()</td>
+                                            <td>@randevu.BaslangicSaati.ToString(@"hh\:mm") - @randevu.BitisSaati.ToString(@"hh\:mm")</td>
+                                            <td>
+                                                @if (randevu.Antrenor != null)
+                                                {
+                                                    @randevu.Antrenor.AdSoyad
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (randevu.Hizmet != null)
+                                                {
+                                                    <span class="badge bg-info">@randevu.Hizmet.Ad</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @switch (randevu.Durum)
+                                                {
+                                                    case FitnessSalonYonetim.Models.RandevuDurumu.Beklemede:
+                                                        <span class="badge bg-warning">Beklemede</span>
+                                                        break;
+                                                    case FitnessSalonYonetim.Models.RandevuDurumu.Onaylandi:
+                                                        <span class="badge bg-success">Onaylandı</span>
+                                                        break;
+                                                    case FitnessSalonYonetim.Models.RandevuDurumu.Reddedildi:
+                                                        <span class="badge bg-danger">Reddedildi</span>
+                                                        break;
+                                                    case FitnessSalonYonetim.Models.RandevuDurumu.Tamamlandi:
+                                                        <span class="badge bg-info">Tamamlandı</span>
+                                                        break;
+                                                    case FitnessSalonYonetim.Models.RandevuDurumu.IptalEdildi:
+                                                        <span class="badge bg-secondary">İptal Edildi</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">@randevu.OlusturmaTarihi.ToShortDateString()</small>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Randevu İstatistikleri -->
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <h6 class="mb-3"><i class="bi bi-bar-chart"></i> Randevu İstatistikleri</h6>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body text-center">
+                                        <h3>@Model.Randevular.Count(r => r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Beklemede)</h3>
+                                        <small>Beklemede</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body text-center">
+                                        <h3>@Model.Randevular.Count(r => r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Onaylandi)</h3>
+                                        <small>Onaylandı</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body text-center">
+                                        <h3>@Model.Randevular.Count(r => r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Tamamlandi)</h3>
+                                        <small>Tamamlandı</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-danger text-white">
+                                    <div class="card-body text-center">
+                                        <h3>@Model.Randevular.Count(r => r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.IptalEdildi || r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Reddedildi)</h3>
+                                        <small>İptal/Red</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-calendar-x" style="font-size: 4rem; color: #ccc;"></i>
+                            <p class="text-muted mt-3">Bu üyenin henüz randevusu bulunmamaktadır.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

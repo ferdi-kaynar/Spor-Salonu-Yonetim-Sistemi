@@ -1,0 +1,215 @@
+@model FitnessSalonYonetim.Models.Antrenor
+
+@{
+    ViewData["Title"] = "Müsaitlik Yönetimi";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-calendar-week"></i> Müsaitlik Yönetimi: @Model.AdSoyad</h1>
+        <div>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                <i class="bi bi-eye"></i> Detaylara Dön
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Listeye Dön
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-list"></i> Mevcut Müsaitlikler</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Musaitlikler != null && Model.Musaitlikler.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Gün</th>
+                                        <th>Başlangıç Saati</th>
+                                        <th>Bitiş Saati</th>
+                                        <th>Süre</th>
+                                        <th>Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var musaitlik in Model.Musaitlikler.OrderBy(m => m.Gun).ThenBy(m => m.BaslangicSaati))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <strong>
+                                                    @switch (musaitlik.Gun)
+                                                    {
+                                                        case DayOfWeek.Monday:
+                                                            <span class="badge bg-primary">Pazartesi</span>
+                                                            break;
+                                                        case DayOfWeek.Tuesday:
+                                                            <span class="badge bg-primary">Salı</span>
+                                                            break;
+                                                        case DayOfWeek.Wednesday:
+                                                            <span class="badge bg-primary">Çarşamba</span>
+                                                            break;
+                                                        case DayOfWeek.Thursday:
+                                                            <span class="badge bg-primary">Perşembe</span>
+                                                            break;
+                                                        case DayOfWeek.Friday:
+                                                            <span class="badge bg-primary">Cuma</span>
+                                                            break;
+                                                        case DayOfWeek.Saturday:
+                                                            <span class="badge bg-info">Cumartesi</span>
+                                                            break;
+                                                        case DayOfWeek.Sunday:
+                                                            <span class="badge bg-warning">Pazar</span>
+                                                            break;
+                                                    }
+                                                </strong>
+                                            </td>
+                                            <td>@musaitlik.BaslangicSaati.ToString(@"hh\:mm")</td>
+                                            <td>@musaitlik.BitisSaati.ToString(@"hh\:mm")</td>
+                                            <td>
+                                                @{
+                                                    var sure = musaitlik.BitisSaati - musaitlik.BaslangicSaati;
+                                                }
+                                                <small class="text-muted">@sure.TotalHours saat</small>
+                                            </td>
+                                            <td>
+                                                @if (musaitlik.Aktif)
+                                                {
+                                                    <span class="badge bg-success">Aktif</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Pasif</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <form asp-action="MusaitlikSil" method="post" class="d-inline" onsubmit="return confirm('Bu müsaitliği silmek istediğinizden emin misiniz?');">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@musaitlik.Id" />
+                                                    <input type="hidden" name="antrenorId" value="@Model.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-calendar-x" style="font-size: 4rem; color: #ccc;"></i>
+                            <p class="text-muted mt-3">Henüz müsaitlik eklenmemiş.</p>
+                            <p class="text-muted">Sağdaki formu kullanarak ilk müsaitliği ekleyin.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Yeni Müsaitlik Ekle</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="MusaitlikEkle" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="antrenorId" value="@Model.Id" />
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Gün</label>
+                            <select name="gun" class="form-select" required>
+                                <option value="">-- Gün Seçin --</option>
+                                <option value="1">Pazartesi</option>
+                                <option value="2">Salı</option>
+                                <option value="3">Çarşamba</option>
+                                <option value="4">Perşembe</option>
+                                <option value="5">Cuma</option>
+                                <option value="6">Cumartesi</option>
+                                <option value="0">Pazar</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Başlangıç Saati</label>
+                            <input type="time" name="baslangicSaati" class="form-control" value="09:00" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Bitiş Saati</label>
+                            <input type="time" name="bitisSaati" class="form-control" value="18:00" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-check-circle"></i> Müsaitlik Ekle
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow mt-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Bilgilendirme</h5>
+                </div>
+                <div class="card-body">
+                    <h6><i class="bi bi-lightbulb text-warning"></i> İpuçları</h6>
+                    <ul class="small">
+                        <li>Aynı gün için birden fazla müsaitlik ekleyebilirsiniz</li>
+                        <li>Müsaitlik saatleri kesişmemelidir</li>
+                        <li>Başlangıç saati bitiş saatinden önce olmalıdır</li>
+                        <li>Müsaitlikler randevu alınabilmesi için gereklidir</li>
+                    </ul>
+
+                    <hr />
+
+                    <h6><i class="bi bi-calendar-check text-success"></i> Haftalık Özet</h6>
+                    <p class="small mb-0">
+                        Toplam <strong>@(Model.Musaitlikler?.Count ?? 0)</strong> müsaitlik tanımlanmış.
+                    </p>
+                    @if (Model.Musaitlikler != null && Model.Musaitlikler.Any())
+                    {
+                        var totalHours = Model.Musaitlikler.Sum(m => (m.BitisSaati - m.BaslangicSaati).TotalHours);
+                        <p class="small mb-0">
+                            Haftalık toplam: <strong>@totalHours.ToString("F1") saat</strong>
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Form validasyonu
+        document.querySelector('form[asp-action="MusaitlikEkle"]')?.addEventListener('submit', function(e) {
+            var baslangic = document.querySelector('input[name="baslangicSaati"]').value;
+            var bitis = document.querySelector('input[name="bitisSaati"]').value;
+            
+            if (baslangic >= bitis) {
+                e.preventDefault();
+                alert('Başlangıç saati bitiş saatinden önce olmalıdır!');
+            }
+        });
+    </script>
+}
+

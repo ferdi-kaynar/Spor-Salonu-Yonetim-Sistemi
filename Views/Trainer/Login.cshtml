@@ -1,0 +1,157 @@
+@model FitnessSalonYonetim.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Eğitmen Girişi";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Kaynar Spor Salonu</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .trainer-login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+        }
+        .trainer-header {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .trainer-header i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+        @@keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .trainer-body {
+            padding: 40px 30px;
+        }
+        .form-control:focus {
+            border-color: #11998e;
+            box-shadow: 0 0 0 0.2rem rgba(17, 153, 142, 0.25);
+        }
+        .btn-trainer {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s;
+        }
+        .btn-trainer:hover {
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            transform: translateY(-2px);
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #11998e;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link a:hover {
+            color: #38ef7d;
+        }
+        .info-box {
+            background: #e8f8f5;
+            border-left: 4px solid #11998e;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="trainer-login-card">
+                    <div class="trainer-header">
+                        <i class="bi bi-person-workspace"></i>
+                        <h2 class="mb-0">Eğitmen Paneli</h2>
+                        <p class="mb-0 mt-2">Eğitmen Girişi</p>
+                    </div>
+                    <div class="trainer-body">
+                        
+
+                        <form asp-action="Login" asp-controller="Account" method="post">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                            
+                            <div class="mb-4">
+                                <label asp-for="Email" class="form-label fw-bold">
+                                    <i class="bi bi-envelope"></i> Eğitmen Email
+                                </label>
+                                <input asp-for="Email" class="form-control form-control-lg" placeholder="egitmen@kaynar.com" autofocus />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label asp-for="Password" class="form-label fw-bold">
+                                    <i class="bi bi-key"></i> Şifre
+                                </label>
+                                <input asp-for="Password" class="form-control form-control-lg" placeholder="••••••••" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="mb-4 form-check">
+                                <input asp-for="RememberMe" class="form-check-input" />
+                                <label asp-for="RememberMe" class="form-check-label">
+                                    Beni Hatırla
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-trainer btn-lg w-100 text-white">
+                                <i class="bi bi-box-arrow-in-right"></i> Eğitmen Girişi Yap
+                            </button>
+                        </form>
+                        
+                        <div class="back-link">
+                            <a asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-arrow-left"></i> Ana Sayfaya Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <p class="text-white">
+                        <small>
+                            <i class="bi bi-info-circle"></i> 
+                            Bu sayfa sadece kayıtlı eğitmenler içindir.
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
+

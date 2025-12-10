@@ -1,0 +1,230 @@
+@model IEnumerable<FitnessSalonYonetim.Models.Randevu>
+@{
+    ViewData["Title"] = "Randevularım";
+    var antrenor = ViewBag.Antrenor as FitnessSalonYonetim.Models.Antrenor;
+}
+
+<div class="container-fluid">
+    <!-- Bildirimler -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-calendar3"></i> Randevularım</h1>
+        <a asp-action="Dashboard" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Dashboard'a Dön
+        </a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Tüm Randevular (@Model.Count())</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Saat</th>
+                                <th>Üye</th>
+                                <th>Hizmet</th>
+                                <th>Süre</th>
+                                <th>Durum</th>
+                                <th>Oluşturulma</th>
+                                <th>Notlar</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var randevu in Model)
+                            {
+                                var isPast = randevu.RandevuTarihi < DateTime.Today;
+                                <tr class="@(isPast ? "table-secondary" : "")">
+                                    <td>
+                                        <strong>@randevu.RandevuTarihi.ToString("dd MMM yyyy")</strong>
+                                        <br />
+                                        <small class="text-muted">@randevu.RandevuTarihi.ToString("dddd")</small>
+                                    </td>
+                                    <td>
+                                        <strong>@randevu.BaslangicSaati.ToString(@"hh\:mm")</strong>
+                                        <small class="text-muted">- @randevu.BitisSaati.ToString(@"hh\:mm")</small>
+                                    </td>
+                                    <td>
+                                        @randevu.Uye.AdSoyad
+                                        <br />
+                                        <small class="text-muted">@randevu.Uye.Email</small>
+                                    </td>
+                                    <td><span class="badge bg-info">@randevu.Hizmet.Ad</span></td>
+                                    <td><small>@randevu.Hizmet.Sure dk</small></td>
+                                    <td>
+                                        @switch (randevu.Durum)
+                                        {
+                                            case FitnessSalonYonetim.Models.RandevuDurumu.Beklemede:
+                                                <span class="badge bg-warning">Beklemede</span>
+                                                break;
+                                            case FitnessSalonYonetim.Models.RandevuDurumu.Onaylandi:
+                                                <span class="badge bg-success">Onaylandı</span>
+                                                break;
+                                            case FitnessSalonYonetim.Models.RandevuDurumu.Reddedildi:
+                                                <span class="badge bg-danger">Reddedildi</span>
+                                                break;
+                                            case FitnessSalonYonetim.Models.RandevuDurumu.Tamamlandi:
+                                                <span class="badge bg-info">Tamamlandı</span>
+                                                break;
+                                            case FitnessSalonYonetim.Models.RandevuDurumu.IptalEdildi:
+                                                <span class="badge bg-secondary">İptal Edildi</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td><small class="text-muted">@randevu.OlusturmaTarihi.ToString("dd.MM.yyyy")</small></td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(randevu.Notlar))
+                                        {
+                                            <small>@randevu.Notlar</small>
+                                        }
+                                        else
+                                        {
+                                            <small class="text-muted">-</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            @if (randevu.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Beklemede)
+                                            {
+                                                <form asp-action="RandevuOnayla" asp-route-id="@randevu.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-success" 
+                                                            onclick="return confirm('Bu randevuyu onaylamak istediğinize emin misiniz?')"
+                                                            title="Onayla">
+                                                        <i class="bi bi-check-circle"></i>
+                                                    </button>
+                                                </form>
+                                                <form asp-action="RandevuReddet" asp-route-id="@randevu.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                                            onclick="return confirm('Bu randevuyu reddetmek istediğinize emin misiniz?')"
+                                                            title="Reddet">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                            @if (randevu.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Onaylandi)
+                                            {
+                                                <form asp-action="RandevuTamamla" asp-route-id="@randevu.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-info" 
+                                                            onclick="return confirm('Bu randevuyu tamamlandı olarak işaretlemek istediğinize emin misiniz?')"
+                                                            title="Tamamla">
+                                                        <i class="bi bi-check2-all"></i>
+                                                    </button>
+                                                </form>
+                                                <form asp-action="RandevuIptal" asp-route-id="@randevu.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-warning" 
+                                                            onclick="return confirm('Bu randevuyu iptal etmek istediğinize emin misiniz?')"
+                                                            title="İptal Et">
+                                                        <i class="bi bi-x-octagon"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                            @if (randevu.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Beklemede && randevu.RandevuTarihi > DateTime.Now)
+                                            {
+                                                <form asp-action="RandevuIptal" asp-route-id="@randevu.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-warning" 
+                                                            onclick="return confirm('Bu randevuyu iptal etmek istediğinize emin misiniz?')"
+                                                            title="İptal Et">
+                                                        <i class="bi bi-x-octagon"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                            @if (randevu.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Tamamlandi || 
+                                                 randevu.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Reddedildi || 
+                                                 randevu.Durum == FitnessSalonYonetim.Models.RandevuDurumu.IptalEdildi)
+                                            {
+                                                <span class="text-muted"><small>İşlem yok</small></span>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Randevu İstatistikleri -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h6><i class="bi bi-bar-chart"></i> Durum Bazında İstatistikler</h6>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.Count(r => r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Beklemede)</h3>
+                                <small>Beklemede</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.Count(r => r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Onaylandi)</h3>
+                                <small>Onaylandı</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.Count(r => r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Tamamlandi)</h3>
+                                <small>Tamamlandı</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.Count(r => r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Reddedildi)</h3>
+                                <small>Reddedildi</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card bg-secondary text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.Count(r => r.Durum == FitnessSalonYonetim.Models.RandevuDurumu.IptalEdildi)</h3>
+                                <small>İptal</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.Count()</h3>
+                                <small>Toplam</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-calendar-x" style="font-size: 4rem; color: #ccc;"></i>
+                    <p class="text-muted mt-3">Henüz randevunuz bulunmamaktadır.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,138 @@
+@model FitnessSalonYonetim.Models.Antrenor
+@{
+    ViewData["Title"] = "Müsaitliklerim";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-calendar-week"></i> Müsaitliklerim</h1>
+        <a asp-action="Dashboard" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Dashboard'a Dön
+        </a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-warning">
+            <h5 class="mb-0">Çalışma Saatlerim</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Musaitlikler != null && Model.Musaitlikler.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Gün</th>
+                                <th>Başlangıç Saati</th>
+                                <th>Bitiş Saati</th>
+                                <th>Toplam Süre</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var musaitlik in Model.Musaitlikler.OrderBy(m => m.Gun).ThenBy(m => m.BaslangicSaati))
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            @switch (musaitlik.Gun)
+                                            {
+                                                case DayOfWeek.Monday:
+                                                    <span class="badge bg-primary">Pazartesi</span>
+                                                    break;
+                                                case DayOfWeek.Tuesday:
+                                                    <span class="badge bg-primary">Salı</span>
+                                                    break;
+                                                case DayOfWeek.Wednesday:
+                                                    <span class="badge bg-primary">Çarşamba</span>
+                                                    break;
+                                                case DayOfWeek.Thursday:
+                                                    <span class="badge bg-primary">Perşembe</span>
+                                                    break;
+                                                case DayOfWeek.Friday:
+                                                    <span class="badge bg-primary">Cuma</span>
+                                                    break;
+                                                case DayOfWeek.Saturday:
+                                                    <span class="badge bg-info">Cumartesi</span>
+                                                    break;
+                                                case DayOfWeek.Sunday:
+                                                    <span class="badge bg-warning">Pazar</span>
+                                                    break;
+                                            }
+                                        </strong>
+                                    </td>
+                                    <td><strong>@musaitlik.BaslangicSaati.ToString(@"hh\:mm")</strong></td>
+                                    <td><strong>@musaitlik.BitisSaati.ToString(@"hh\:mm")</strong></td>
+                                    <td>
+                                        @{
+                                            var sure = musaitlik.BitisSaati - musaitlik.BaslangicSaati;
+                                        }
+                                        <span class="badge bg-secondary">@sure.TotalHours saat</span>
+                                    </td>
+                                    <td>
+                                        @if (musaitlik.Aktif)
+                                        {
+                                            <span class="badge bg-success">Aktif</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Pasif</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Haftalık Özet -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h6><i class="bi bi-bar-chart"></i> Haftalık Özet</h6>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.Musaitlikler.Count</h3>
+                                <p class="mb-0">Toplam Müsaitlik</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h3>@Model.Musaitlikler.Count(m => m.Aktif)</h3>
+                                <p class="mb-0">Aktif Müsaitlik</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                @{
+                                    var toplamSaat = Model.Musaitlikler.Sum(m => (m.BitisSaati - m.BaslangicSaati).TotalHours);
+                                }
+                                <h3>@toplamSaat.ToString("F1")</h3>
+                                <p class="mb-0">Haftalık Toplam Saat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info mt-4">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Bilgi:</strong> Müsaitlik değişiklikleri için lütfen yönetici ile iletişime geçin.
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-calendar-x" style="font-size: 4rem; color: #ccc;"></i>
+                    <p class="text-muted mt-3">Henüz müsaitlik tanımlanmamış.</p>
+                    <p class="text-muted">Lütfen yönetici ile iletişime geçin.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

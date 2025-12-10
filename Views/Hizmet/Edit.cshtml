@@ -1,0 +1,113 @@
+@model FitnessSalonYonetim.Models.Hizmet
+
+@{
+    ViewData["Title"] = "Hizmet Düzenle";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-pencil-square"></i> Hizmet Düzenle</h1>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Listeye Dön
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-white">
+                <h5 class="mb-0">Hizmet Bilgilerini Düzenle</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <div class="mb-3">
+                        <label asp-for="Ad" class="form-label"></label>
+                        <input asp-for="Ad" class="form-control" />
+                        <span asp-validation-for="Ad" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Aciklama" class="form-label"></label>
+                        <textarea asp-for="Aciklama" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Aciklama" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Sure" class="form-label"></label>
+                            <input asp-for="Sure" type="number" class="form-control" />
+                            <span asp-validation-for="Sure" class="text-danger"></span>
+                            <div class="form-text">Dakika cinsinden</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Ucret" class="form-label"></label>
+                            <input asp-for="Ucret" type="number" step="0.01" class="form-control" />
+                            <span asp-validation-for="Ucret" class="text-danger"></span>
+                            <div class="form-text">TL</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="HizmetTuru" class="form-label"></label>
+                        <select asp-for="HizmetTuru" class="form-select">
+                            <option value="">Seçiniz</option>
+                            <option value="Bireysel">Bireysel</option>
+                            <option value="Grup">Grup</option>
+                            <option value="Online">Online</option>
+                            <option value="Özel">Özel</option>
+                        </select>
+                        <span asp-validation-for="HizmetTuru" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SalonId" class="form-label">Salon</label>
+                        <select asp-for="SalonId" class="form-select" asp-items="ViewBag.SalonId">
+                            <option value="">Seçiniz</option>
+                        </select>
+                        <span asp-validation-for="SalonId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="Aktif" class="form-check-input" />
+                        <label asp-for="Aktif" class="form-check-label"></label>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> İptal
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-save"></i> Güncelle
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Bilgi</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Hizmet Düzenleme</strong></p>
+                <p class="small">Mevcut hizmet bilgilerini güncelleyebilirsiniz.</p>
+                <hr>
+                <p class="small"><strong>Önemli:</strong></p>
+                <ul class="small">
+                    <li>Değişiklikler tüm randevulara yansıyacaktır</li>
+                    <li>Pasif hizmetler listede görünmez</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

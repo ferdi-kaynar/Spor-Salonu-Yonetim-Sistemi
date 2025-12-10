@@ -1,0 +1,186 @@
+@model FitnessSalonYonetim.Models.Antrenor
+
+@{
+    ViewData["Title"] = "Eğitmen Düzenle";
+    var hizmetler = ViewData["Hizmetler"] as List<FitnessSalonYonetim.Models.Hizmet>;
+    var selectedHizmetler = ViewData["SelectedHizmetler"] as List<int> ?? new List<int>();
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4"><i class="bi bi-pencil-square"></i> Eğitmen Düzenle: @Model.AdSoyad</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0">Eğitmen Bilgileri</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Ad" class="form-label"></label>
+                                <input asp-for="Ad" class="form-control" />
+                                <span asp-validation-for="Ad" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Soyad" class="form-label"></label>
+                                <input asp-for="Soyad" class="form-control" />
+                                <span asp-validation-for="Soyad" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Email" class="form-label"></label>
+                                <input asp-for="Email" class="form-control" type="email" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Telefon" class="form-label"></label>
+                                <input asp-for="Telefon" class="form-control" />
+                                <span asp-validation-for="Telefon" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="UzmanlikAlanlari" class="form-label"></label>
+                            <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Örn: Kas Geliştirme, Kilo Verme, Fitness" />
+                            <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
+                            <small class="form-text text-muted">Virgülle ayırarak birden fazla alan girebilirsiniz.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Biyografi" class="form-label"></label>
+                            <textarea asp-for="Biyografi" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Biyografi" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ProfilResmi" class="form-label"></label>
+                            <input asp-for="ProfilResmi" class="form-control" placeholder="Profil resmi URL'si" />
+                            <span asp-validation-for="ProfilResmi" class="text-danger"></span>
+                            <small class="form-text text-muted">Profil resminin URL adresini girin.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SalonId" class="form-label"></label>
+                            <select asp-for="SalonId" class="form-select" asp-items="ViewBag.SalonId">
+                                <option value="">-- Salon Seçin --</option>
+                            </select>
+                            <span asp-validation-for="SalonId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Verdiği Hizmetler</label>
+                            <div class="border rounded p-3">
+                                @if (hizmetler != null && hizmetler.Any())
+                                {
+                                    <div class="row">
+                                        @foreach (var hizmet in hizmetler)
+                                        {
+                                            <div class="col-md-6 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="selectedHizmetler" value="@hizmet.Id" id="hizmet_@hizmet.Id" 
+                                                           @(selectedHizmetler.Contains(hizmet.Id) ? "checked" : "")>
+                                                    <label class="form-check-label" for="hizmet_@hizmet.Id">
+                                                        @hizmet.Ad
+                                                        <small class="text-muted">(@hizmet.Sure dk - @hizmet.Ucret ₺)</small>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">Henüz hizmet bulunmamaktadır.</p>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="Aktif" class="form-check-input" />
+                            <label asp-for="Aktif" class="form-check-label"></label>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-check-circle"></i> Güncelle
+                            </button>
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                                <i class="bi bi-eye"></i> Detaylara Dön
+                            </a>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> İptal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-person-circle"></i> Mevcut Bilgiler</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        @if (!string.IsNullOrEmpty(Model.ProfilResmi))
+                        {
+                            <img src="@Model.ProfilResmi" alt="@Model.AdSoyad" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white" style="width: 100px; height: 100px; font-size: 3rem;">
+                                <i class="bi bi-person"></i>
+                            </div>
+                        }
+                    </div>
+                    <p><strong>ID:</strong> @Model.Id</p>
+                    <p><strong>Durum:</strong> 
+                        @if (Model.Aktif)
+                        {
+                            <span class="badge bg-success">Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Pasif</span>
+                        }
+                    </p>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0"><i class="bi bi-gear"></i> Diğer İşlemler</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Musaitlik" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+                            <i class="bi bi-calendar-week"></i> Müsaitlik Yönetimi
+                        </a>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info">
+                            <i class="bi bi-eye"></i> Detayları Görüntüle
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                            <i class="bi bi-trash"></i> Sil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

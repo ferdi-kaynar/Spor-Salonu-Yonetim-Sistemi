@@ -1,0 +1,117 @@
+@model IEnumerable<FitnessSalonYonetim.Models.Randevu>
+
+@{
+    ViewData["Title"] = "Randevularım";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-calendar3"></i> Randevularım</h1>
+    @if (User.IsInRole("Uye"))
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Yeni Randevu Al
+        </a>
+    }
+</div>
+
+@if (Model.Any())
+{
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tarih</th>
+                            <th>Saat</th>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <th>Üye</th>
+                            }
+                            <th>Antrenör</th>
+                            <th>Hizmet</th>
+                            <th>Ücret</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.RandevuTarihi.ToShortDateString()</td>
+                                <td>@item.BaslangicSaati.ToString(@"hh\:mm") - @item.BitisSaati.ToString(@"hh\:mm")</td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <td>@item.Uye.AdSoyad</td>
+                                }
+                                <td>@item.Antrenor.AdSoyad</td>
+                                <td>@item.Hizmet.Ad</td>
+                                <td>@item.Ucret.ToString("C")</td>
+                                <td>
+                                    @switch (item.Durum)
+                                    {
+                                        case FitnessSalonYonetim.Models.RandevuDurumu.Beklemede:
+                                            <span class="badge bg-warning">Beklemede</span>
+                                            break;
+                                        case FitnessSalonYonetim.Models.RandevuDurumu.Onaylandi:
+                                            <span class="badge bg-success">Onaylandı</span>
+                                            break;
+                                        case FitnessSalonYonetim.Models.RandevuDurumu.Reddedildi:
+                                            <span class="badge bg-danger">Reddedildi</span>
+                                            break;
+                                        case FitnessSalonYonetim.Models.RandevuDurumu.Tamamlandi:
+                                            <span class="badge bg-info">Tamamlandı</span>
+                                            break;
+                                        case FitnessSalonYonetim.Models.RandevuDurumu.IptalEdildi:
+                                            <span class="badge bg-secondary">İptal Edildi</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            @if (item.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Beklemede)
+                                            {
+                                                <form asp-action="Onayla" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Bu randevuyu onaylamak istediğinize emin misiniz?')">
+                                                        <i class="bi bi-check"></i>
+                                                    </button>
+                                                </form>
+                                                <form asp-action="Reddet" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bu randevuyu reddetmek istediğinize emin misiniz?')">
+                                                        <i class="bi bi-x"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                        }
+                                        @if (item.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Beklemede || item.Durum == FitnessSalonYonetim.Models.RandevuDurumu.Onaylandi)
+                                        {
+                                            <form asp-action="Iptal" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Randevuyu iptal etmek istediğinize emin misiniz?')">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Henüz randevunuz bulunmamaktadır.
+        <a asp-action="Create" class="alert-link">Hemen randevu alın!</a>
+    </div>
+}
+

@@ -1,0 +1,111 @@
+@model FitnessSalonYonetim.Models.Salon
+
+@{
+    ViewData["Title"] = "Salon Detayları";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-building"></i> Salon Detayları</h1>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+            <i class="bi bi-pencil"></i> Düzenle
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Listeye Dön
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Salon Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Salon Adı</dt>
+                    <dd class="col-sm-9">@Model.Ad</dd>
+
+                    <dt class="col-sm-3">Adres</dt>
+                    <dd class="col-sm-9">@Model.Adres</dd>
+
+                    <dt class="col-sm-3">Telefon</dt>
+                    <dd class="col-sm-9">@Model.Telefon</dd>
+
+                    <dt class="col-sm-3">Açılış Saati</dt>
+                    <dd class="col-sm-9">@Model.AcilisSaati.ToString(@"hh\:mm")</dd>
+
+                    <dt class="col-sm-3">Kapanış Saati</dt>
+                    <dd class="col-sm-9">@Model.KapanisSaati.ToString(@"hh\:mm")</dd>
+
+                    <dt class="col-sm-3">Açıklama</dt>
+                    <dd class="col-sm-9">@(Model.Aciklama ?? "Belirtilmemiş")</dd>
+
+                    <dt class="col-sm-3">Durum</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Aktif)
+                        {
+                            <span class="badge bg-success">Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Pasif</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow mb-3">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-gear"></i> Hizmetler</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Hizmetler != null && Model.Hizmetler.Any())
+                {
+                    <p><strong>Toplam Hizmet:</strong> @Model.Hizmetler.Count(h => h.Aktif)</p>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var hizmet in Model.Hizmetler.Where(h => h.Aktif))
+                        {
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle text-success"></i> @hizmet.Ad
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">Henüz hizmet eklenmemiş.</p>
+                }
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-people"></i> Antrenörler</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Antrenorler != null && Model.Antrenorler.Any())
+                {
+                    <p><strong>Toplam Antrenör:</strong> @Model.Antrenorler.Count(a => a.Aktif)</p>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var antrenor in Model.Antrenorler.Where(a => a.Aktif))
+                        {
+                            <li class="list-group-item">
+                                <i class="bi bi-person-check text-success"></i> @antrenor.AdSoyad
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">Henüz antrenör eklenmemiş.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,289 @@
+@model FitnessSalonYonetim.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "AI Egzersiz & Diyet Asistanı";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="mb-3"><i class="bi bi-robot"></i> Yapay Zeka Destekli Fitness Asistanı</h1>
+            <p class="lead text-muted">Kişiye özel egzersiz programları, diyet önerileri ve motivasyon görselleri oluşturun</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Egzersiz & Diyet Önerisi Bölümü -->
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="mb-0 text-white"><i class="bi bi-person-check"></i> Kişisel Fitness Planı Oluştur</h5>
+                </div>
+                <div class="card-body">
+                    <form id="aiForm" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="boy" class="form-label"><i class="bi bi-arrows-vertical"></i> Boy (cm)</label>
+                                <input type="number" class="form-control" id="boy" name="Boy" value="@Model?.Boy" required min="100" max="250">
+                                <div class="form-text">100-250 cm arası</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="kilo" class="form-label"><i class="bi bi-speedometer2"></i> Kilo (kg)</label>
+                                <input type="number" step="0.1" class="form-control" id="kilo" name="Kilo" value="@Model?.Kilo" required min="30" max="300">
+                                <div class="form-text">30-300 kg arası</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="cinsiyet" class="form-label"><i class="bi bi-gender-ambiguous"></i> Cinsiyet</label>
+                                <select class="form-select" id="cinsiyet" name="Cinsiyet" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="Erkek">Erkek</option>
+                                    <option value="Kadın">Kadın</option>
+                                    <option value="Diğer">Diğer</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="yas" class="form-label"><i class="bi bi-calendar"></i> Yaş (Opsiyonel)</label>
+                                <input type="number" class="form-control" id="yas" name="Yas" min="13" max="100">
+                                <div class="form-text">Daha iyi öneriler için</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="hedef" class="form-label"><i class="bi bi-target"></i> Hedefiniz</label>
+                                <select class="form-select" id="hedef" name="Hedef" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="Kilo Verme">🔥 Kilo Verme</option>
+                                    <option value="Kas Geliştirme">💪 Kas Geliştirme</option>
+                                    <option value="Zayıflama">⚖️ Zayıflama</option>
+                                    <option value="Esneklik">🧘 Esneklik ve Yoga</option>
+                                    <option value="Genel Sağlık">❤️ Genel Sağlık ve Fitness</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="aktiviteSeviyesi" class="form-label"><i class="bi bi-activity"></i> Aktivite Seviyesi</label>
+                                <select class="form-select" id="aktiviteSeviyesi" name="AktiviteSeviyesi">
+                                    <option value="">Seçiniz (Opsiyonel)</option>
+                                    <option value="Hareketsiz">Hareketsiz (Ofis işi)</option>
+                                    <option value="Az Aktif">Az Aktif (Haftada 1-3 gün)</option>
+                                    <option value="Orta Aktif">Orta Aktif (Haftada 3-5 gün)</option>
+                                    <option value="Çok Aktif">Çok Aktif (Haftada 6-7 gün)</option>
+                                    <option value="Sporcu">Profesyonel Sporcu</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="foto" class="form-label"><i class="bi bi-camera"></i> Fotoğraf Yükle (Opsiyonel)</label>
+                            <input type="file" class="form-control" id="foto" name="Foto" accept="image/*">
+                            <div class="form-text">Fotoğrafınızı yükleyerek daha kişiselleştirilmiş öneriler alabilirsiniz</div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> <strong>Yapay Zeka Desteği:</strong>
+                            OpenAI API yapılandırıldıysa, GPT-4 ile kişiye özel detaylı öneriler oluşturulur.
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-lg btn-primary" id="submitBtn">
+                                <i class="bi bi-magic"></i> Plan Oluştur
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bilgi Paneli -->
+        <div class="col-md-4">
+            <!-- Nasıl Çalışır -->
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Nasıl Çalışır?</h5>
+                </div>
+                <div class="card-body">
+                    <p>Yapay zeka destekli sistemimiz, kişisel bilgilerinizi analiz ederek size özel egzersiz programları önerir.</p>
+                    <hr>
+                    <p><strong>Özellikler:</strong></p>
+                    <ul class="small">
+                        <li>✅ BMI hesaplama</li>
+                        <li>✅ GPT-4 ile detaylı analizler</li>
+                        <li>✅ Kişiye özel egzersiz programı</li>
+                        <li>✅ Beslenme tavsiyeleri</li>
+                        <li>✅ Hedef odaklı planlar</li>
+                        <li>✅ Motivasyon görselleri</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Motivasyon Görseli Oluştur -->
+            <div class="card shadow">
+                <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <h5 class="mb-0 text-white"><i class="bi bi-image"></i> Motivasyon Görseli</h5>
+                </div>
+                <div class="card-body">
+                    <form id="imageForm">
+                        <div class="mb-3">
+                            <label for="hedefVucutTipi" class="form-label">Hedef Vücut Tipi</label>
+                            <select class="form-select" id="hedefVucutTipi" name="HedefVucutTipi" required>
+                                <option value="">Seçiniz</option>
+                                <option value="Kaslı">💪 Kaslı</option>
+                                <option value="Zayıf">⚡ Zayıf ve Fit</option>
+                                <option value="Fit">❤️ Fit ve Sağlıklı</option>
+                                <option value="Atletik">🏃 Atletik</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="imageCinsiyet" class="form-label">Cinsiyet</label>
+                            <select class="form-select" id="imageCinsiyet" name="Cinsiyet" required>
+                                <option value="">Seçiniz</option>
+                                <option value="Erkek">Erkek</option>
+                                <option value="Kadın">Kadın</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="egzersizTuru" class="form-label">Egzersiz Türü</label>
+                            <select class="form-select" id="egzersizTuru" name="EgzersizTuru">
+                                <option value="">Seçiniz (Opsiyonel)</option>
+                                <option value="weightlifting">Ağırlık Kaldırma</option>
+                                <option value="running">Koşu</option>
+                                <option value="yoga">Yoga</option>
+                                <option value="crossfit">CrossFit</option>
+                                <option value="swimming">Yüzme</option>
+                            </select>
+                        </div>
+
+                        <div class="alert alert-warning small">
+                            <i class="bi bi-exclamation-triangle"></i> DALL-E 3 API gerektirir
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary" id="imageBtn">
+                                <i class="bi bi-stars"></i> Görsel Oluştur
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sonuç Kartı -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow" id="resultCard" style="display: none;">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-clipboard-check"></i> Sizin İçin Önerilen Program</h5>
+                </div>
+                <div class="card-body" id="resultContent">
+                    <!-- AJAX ile doldurulacak -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Görsel Sonuç Kartı -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow" id="imageResultCard" style="display: none;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-image"></i> Motivasyon Görseliniz</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img id="generatedImage" src="" alt="Motivasyon Görseli" class="img-fluid rounded shadow" style="max-height: 500px;">
+                    <div class="mt-3">
+                        <a id="downloadImage" href="" download="motivasyon.png" class="btn btn-success">
+                            <i class="bi bi-download"></i> İndir
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Egzersiz Önerisi Formu
+            $('#aiForm').submit(function (e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+                var submitBtn = $('#submitBtn');
+                var originalText = submitBtn.html();
+
+                submitBtn.prop('disabled', true).html('<i class="bi bi-hourglass-split"></i> Analiz ediliyor...');
+
+                $.ajax({
+                    url: '@Url.Action("GetEgzersizOnerisi", "AI")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        submitBtn.prop('disabled', false).html(originalText);
+
+                        if (response.success) {
+                            $('#resultContent').html(response.oneriHTML);
+                            $('#resultCard').fadeIn();
+                            $('html, body').animate({
+                                scrollTop: $("#resultCard").offset().top - 100
+                            }, 500);
+                        } else {
+                            alert('Hata: ' + (response.message || 'Bilinmeyen hata'));
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        submitBtn.prop('disabled', false).html(originalText);
+                        alert('Bir hata oluştu: ' + error);
+                    }
+                });
+            });
+
+            // Görsel Oluşturma Formu
+            $('#imageForm').submit(function (e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+                var imageBtn = $('#imageBtn');
+                var originalText = imageBtn.html();
+
+                imageBtn.prop('disabled', true).html('<i class="bi bi-hourglass-split"></i> Görsel oluşturuluyor...');
+
+                $.ajax({
+                    url: '@Url.Action("GenerateMotivationImage", "AI")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        imageBtn.prop('disabled', false).html(originalText);
+
+                        if (response.success && response.imageUrl) {
+                            $('#generatedImage').attr('src', response.imageUrl);
+                            $('#downloadImage').attr('href', response.imageUrl);
+                            $('#imageResultCard').fadeIn();
+                            $('html, body').animate({
+                                scrollTop: $("#imageResultCard").offset().top - 100
+                            }, 500);
+                        } else {
+                            alert('Hata: ' + (response.message || 'Görsel oluşturulamadı'));
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        imageBtn.prop('disabled', false).html(originalText);
+                        alert('Bir hata oluştu: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+}
