@@ -1,0 +1,95 @@
+@model FitnessSalonYonetim.Models.Antrenor
+@{
+    ViewData["Title"] = "Yeni Eğitmen Ekle";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-plus-fill"></i> Yeni Eğitmen Ekle</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="EgitmenEkle" method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Ad" class="form-label"></label>
+                                <input asp-for="Ad" class="form-control" />
+                                <span asp-validation-for="Ad" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Soyad" class="form-label"></label>
+                                <input asp-for="Soyad" class="form-control" />
+                                <span asp-validation-for="Soyad" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Email" class="form-label"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Telefon" class="form-label"></label>
+                                <input asp-for="Telefon" class="form-control" />
+                                <span asp-validation-for="Telefon" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="UzmanlikAlanlari" class="form-label"></label>
+                            <input asp-for="UzmanlikAlanlari" class="form-control" placeholder="Örn: Yoga, Pilates, Kros Fit" />
+                            <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Biyografi" class="form-label"></label>
+                            <textarea asp-for="Biyografi" class="form-control" rows="3" placeholder="Eğitmenin kısa biyografisi"></textarea>
+                            <span asp-validation-for="Biyografi" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SalonId" class="form-label">Salon</label>
+                            <select asp-for="SalonId" class="form-select">
+                                <option value="">Salon Seçiniz</option>
+                                @foreach (var salon in ViewBag.Salonlar)
+                                {
+                                    <option value="@salon.Id">@salon.Ad</option>
+                                }
+                            </select>
+                            <span asp-validation-for="SalonId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ProfilResmi" class="form-label"></label>
+                            <input asp-for="ProfilResmi" class="form-control" placeholder="Profil resmi URL'si (Opsiyonel)" />
+                            <span asp-validation-for="ProfilResmi" class="text-danger"></span>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Eğitmen otomatik olarak "Aktif" durumda oluşturulacaktır.
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-circle"></i> Eğitmen Ekle
+                            </button>
+                            <a asp-action="Egitmenler" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> İptal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

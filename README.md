@@ -1,4 +1,4 @@
-# Kaynar Spor Salonu Yönetim Sistemi
+# FitLife Spor Salonu Yönetim Sistemi
 
 ASP.NET Core MVC ile geliştirilmiş spor salonu yönetim ve randevu sistemi.
 
@@ -8,7 +8,7 @@ ASP.NET Core MVC ile geliştirilmiş spor salonu yönetim ve randevu sistemi.
 - Randevu Sistemi (otomatik kontrol + onay)
 - Rol Sistemi (Admin/Trainer/Üye)
 - REST API + LINQ filtreleme
-- AI Entegrasyonu (OpenAI GPT-4, DALL-E 3)
+- Gömülü AI Modeli (kişiselleştirilmiş fitness planı)
 - Modern UI (Bootstrap 5)
 
 ## Teknolojiler
@@ -25,15 +25,6 @@ dotnet ef database update
 dotnet run
 ```
 
-Tarayıcı: `https://localhost:5001`
-
-## Varsayılan Giriş
-
-| Email | Şifre | Rol |
-|-------|-------|-----|
-| admin@fitlife.com | Admin123! | Admin |
-| trainer@fitlife.com | Trainer123! | Trainer |
-| uye@fitlife.com | Uye123! | Üye |
 
 ## API Örnekleri
 

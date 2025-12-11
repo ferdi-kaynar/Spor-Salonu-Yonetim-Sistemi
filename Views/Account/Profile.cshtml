@@ -1,0 +1,220 @@
+@model FitnessSalonYonetim.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "Profilim";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-circle"></i> Profilim</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Profile" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <!-- Profil Resmi -->
+                            <div class="col-md-12 text-center mb-4">
+                                <div class="profile-image-container">
+                                    @if (!string.IsNullOrEmpty(Model.ProfilResmi))
+                                    {
+                                        <img src="@Model.ProfilResmi" id="profilePreview" alt="Profil Resmi" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;">
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white mb-3" id="profilePlaceholder" style="width: 200px; height: 200px; font-size: 6rem;">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                        <img src="" id="profilePreview" alt="Profil Resmi" class="rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover; display: none;">
+                                    }
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profilResmi" class="btn btn-outline-primary">
+                                        <i class="bi bi-camera"></i> Profil Resmi Değiştir
+                                    </label>
+                                    <input type="file" id="profilResmi" name="profilResmi" accept="image/*" class="d-none" onchange="previewImage(this)" />
+                                    <p class="text-muted small mt-2">JPG, PNG veya GIF (Maks. 5MB)</p>
+                                </div>
+                            </div>
+
+                            <!-- Kişisel Bilgiler -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Ad" class="form-label"></label>
+                                    <input asp-for="Ad" class="form-control" />
+                                    <span asp-validation-for="Ad" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Soyad" class="form-label"></label>
+                                    <input asp-for="Soyad" class="form-control" />
+                                    <span asp-validation-for="Soyad" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label"></label>
+                                    <input asp-for="Email" class="form-control" readonly />
+                                    <small class="text-muted">Email değiştirilemez</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Telefon" class="form-label"></label>
+                                    <input asp-for="Telefon" class="form-control" />
+                                    <span asp-validation-for="Telefon" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="DogumTarihi" class="form-label"></label>
+                                    <input asp-for="DogumTarihi" type="date" class="form-control" />
+                                    <span asp-validation-for="DogumTarihi" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Cinsiyet" class="form-label"></label>
+                                    <select asp-for="Cinsiyet" class="form-select">
+                                        <option value="">Seçiniz</option>
+                                        <option value="Erkek">Erkek</option>
+                                        <option value="Kadın">Kadın</option>
+                                        <option value="Diğer">Diğer</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Fiziksel Bilgiler -->
+                            <div class="col-md-12">
+                                <h5 class="mt-3 mb-3"><i class="bi bi-activity"></i> Fiziksel Bilgiler</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Boy" class="form-label"></label>
+                                    <div class="input-group">
+                                        <input asp-for="Boy" type="number" class="form-control" placeholder="Örn: 175" />
+                                        <span class="input-group-text">cm</span>
+                                    </div>
+                                    <span asp-validation-for="Boy" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Kilo" class="form-label"></label>
+                                    <div class="input-group">
+                                        <input asp-for="Kilo" type="number" step="0.1" class="form-control" placeholder="Örn: 75.5" />
+                                        <span class="input-group-text">kg</span>
+                                    </div>
+                                    <span asp-validation-for="Kilo" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- BMI Gösterimi -->
+                            <div class="col-md-12" id="bmiContainer" style="display: none;">
+                                <div class="alert alert-info">
+                                    <strong>Vücut Kitle İndeksi (BMI):</strong> <span id="bmiValue"></span>
+                                    <span class="badge bg-primary ms-2" id="bmiCategory"></span>
+                                </div>
+                            </div>
+
+                            <!-- Adres -->
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label asp-for="Adres" class="form-label"></label>
+                                    <textarea asp-for="Adres" class="form-control" rows="3"></textarea>
+                                    <span asp-validation-for="Adres" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> Profili Güncelle
+                            </button>
+                            <a asp-action="ChangePassword" class="btn btn-warning">
+                                <i class="bi bi-key"></i> Şifre Değiştir
+                            </a>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> İptal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- AI Önerisi Kartı -->
+            <div class="card shadow mt-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-robot"></i> Yapay Zeka ile Kişisel Plan</h5>
+                </div>
+                <div class="card-body">
+                    <p>Boy, kilo ve diğer bilgilerinize göre yapay zeka destekli egzersiz ve diyet planı alabilirsiniz.</p>
+                    <a asp-controller="AI" asp-action="Index" class="btn btn-success">
+                        <i class="bi bi-stars"></i> AI Planı Al
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Resim önizleme
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#profilePreview').attr('src', e.target.result).show();
+                    $('#profilePlaceholder').hide();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // BMI Hesaplama
+        function calculateBMI() {
+            var boy = parseFloat($('#Boy').val());
+            var kilo = parseFloat($('#Kilo').val());
+            
+            if (boy > 0 && kilo > 0) {
+                var boyMetre = boy / 100;
+                var bmi = (kilo / (boyMetre * boyMetre)).toFixed(1);
+                
+                $('#bmiValue').text(bmi);
+                
+                var category = '';
+                var badgeClass = 'bg-primary';
+                
+                if (bmi < 18.5) {
+                    category = 'Zayıf';
+                    badgeClass = 'bg-info';
+                } else if (bmi < 25) {
+                    category = 'Normal';
+                    badgeClass = 'bg-success';
+                } else if (bmi < 30) {
+                    category = 'Fazla Kilolu';
+                    badgeClass = 'bg-warning';
+                } else {
+                    category = 'Obez';
+                    badgeClass = 'bg-danger';
+                }
+                
+                $('#bmiCategory').text(category).attr('class', 'badge ms-2 ' + badgeClass);
+                $('#bmiContainer').show();
+            } else {
+                $('#bmiContainer').hide();
+            }
+        }
+
+        $(document).ready(function() {
+            $('#Boy, #Kilo').on('input', calculateBMI);
+            calculateBMI(); // Sayfa yüklendiğinde hesapla
+        });
+    </script>
+}
+

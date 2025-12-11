@@ -1860,19 +1860,6 @@
           "lib/netstandard2.0/NuGet.Versioning.dll": {}
         }
       },
-      "OpenAI/2.0.0-beta.11": {
-        "type": "package",
-        "dependencies": {
-          "System.ClientModel": "1.1.0-beta.5",
-          "System.Diagnostics.DiagnosticSource": "6.0.1"
-        },
-        "compile": {
-          "lib/net6.0/OpenAI.dll": {}
-        },
-        "runtime": {
-          "lib/net6.0/OpenAI.dll": {}
-        }
-      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
         "type": "package",
         "runtimeTargets": {
@@ -2070,19 +2057,6 @@
         },
         "runtime": {
           "lib/netstandard1.1/System.Buffers.dll": {}
-        }
-      },
-      "System.ClientModel/1.1.0-beta.5": {
-        "type": "package",
-        "dependencies": {
-          "System.Memory.Data": "1.0.2",
-          "System.Text.Json": "4.7.2"
-        },
-        "compile": {
-          "lib/net6.0/System.ClientModel.dll": {}
-        },
-        "runtime": {
-          "lib/net6.0/System.ClientModel.dll": {}
         }
       },
       "System.Collections/4.3.0": {
@@ -2563,19 +2537,6 @@
         },
         "runtime": {
           "lib/netcoreapp2.1/_._": {}
-        }
-      },
-      "System.Memory.Data/1.0.2": {
-        "type": "package",
-        "dependencies": {
-          "System.Text.Encodings.Web": "4.7.2",
-          "System.Text.Json": "4.6.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/System.Memory.Data.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Memory.Data.dll": {}
         }
       },
       "System.Net.Http/4.3.0": {
@@ -3212,24 +3173,6 @@
         },
         "compile": {
           "ref/netstandard1.3/System.Text.Encoding.Extensions.dll": {}
-        }
-      },
-      "System.Text.Encodings.Web/4.7.2": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.1/System.Text.Encodings.Web.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.1/System.Text.Encodings.Web.dll": {}
-        }
-      },
-      "System.Text.Json/4.7.2": {
-        "type": "package",
-        "compile": {
-          "lib/netcoreapp3.0/System.Text.Json.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/System.Text.Json.dll": {}
         }
       },
       "System.Text.RegularExpressions/4.3.0": {
@@ -6219,24 +6162,6 @@
         "nuget.versioning.nuspec"
       ]
     },
-    "OpenAI/2.0.0-beta.11": {
-      "sha512": "hV+M9NDwKoaHL3lFsGdwW4moP4QgdKzjjh0bsjyFxzHJhazb/7wG9lvXQ8XOWE/y5WJzuiKTmBfGSeC/svcOYA==",
-      "type": "package",
-      "path": "openai/2.0.0-beta.11",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "CHANGELOG.md",
-        "OpenAI.png",
-        "README.md",
-        "lib/net6.0/OpenAI.dll",
-        "lib/net6.0/OpenAI.xml",
-        "lib/netstandard2.0/OpenAI.dll",
-        "lib/netstandard2.0/OpenAI.xml",
-        "openai.2.0.0-beta.11.nupkg.sha512",
-        "openai.nuspec"
-      ]
-    },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
       "sha512": "HdSSp5MnJSsg08KMfZThpuLPJpPwE5hBXvHwoKWosyHHfe8Mh5WKT0ylEOf6yNzX6Ngjxe4Whkafh5q7Ymac4Q==",
       "type": "package",
@@ -6529,24 +6454,6 @@
         "lib/netstandard1.1/System.Buffers.dll",
         "system.buffers.4.3.0.nupkg.sha512",
         "system.buffers.nuspec"
-      ]
-    },
-    "System.ClientModel/1.1.0-beta.5": {
-      "sha512": "6YP3qvWGkSvvK838pWpEcuWi4ibSf8fP3Q8OEovRfIoO6BK6Xvp9VyBjt/Tjdyq//JU0aQBhgxH/vQ95W7LQ5g==",
-      "type": "package",
-      "path": "system.clientmodel/1.1.0-beta.5",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "CHANGELOG.md",
-        "DotNetPackageIcon.png",
-        "README.md",
-        "lib/net6.0/System.ClientModel.dll",
-        "lib/net6.0/System.ClientModel.xml",
-        "lib/netstandard2.0/System.ClientModel.dll",
-        "lib/netstandard2.0/System.ClientModel.xml",
-        "system.clientmodel.1.1.0-beta.5.nupkg.sha512",
-        "system.clientmodel.nuspec"
       ]
     },
     "System.Collections/4.3.0": {
@@ -7801,24 +7708,6 @@
         "system.memory.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
-      ]
-    },
-    "System.Memory.Data/1.0.2": {
-      "sha512": "JGkzeqgBsiZwKJZ1IxPNsDFZDhUvuEdX8L8BDC8N3KOj+6zMcNU28CNN59TpZE/VJYy9cP+5M+sbxtWJx3/xtw==",
-      "type": "package",
-      "path": "system.memory.data/1.0.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "CHANGELOG.md",
-        "DotNetPackageIcon.png",
-        "README.md",
-        "lib/net461/System.Memory.Data.dll",
-        "lib/net461/System.Memory.Data.xml",
-        "lib/netstandard2.0/System.Memory.Data.dll",
-        "lib/netstandard2.0/System.Memory.Data.xml",
-        "system.memory.data.1.0.2.nupkg.sha512",
-        "system.memory.data.nuspec"
       ]
     },
     "System.Net.Http/4.3.0": {
@@ -9696,52 +9585,6 @@
         "system.text.encoding.extensions.nuspec"
       ]
     },
-    "System.Text.Encodings.Web/4.7.2": {
-      "sha512": "iTUgB/WtrZ1sWZs84F2hwyQhiRH6QNjQv2DkwrH+WP6RoFga2Q1m3f9/Q7FG8cck8AdHitQkmkXSY8qylcDmuA==",
-      "type": "package",
-      "path": "system.text.encodings.web/4.7.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.Text.Encodings.Web.dll",
-        "lib/net461/System.Text.Encodings.Web.xml",
-        "lib/netstandard1.0/System.Text.Encodings.Web.dll",
-        "lib/netstandard1.0/System.Text.Encodings.Web.xml",
-        "lib/netstandard2.0/System.Text.Encodings.Web.dll",
-        "lib/netstandard2.0/System.Text.Encodings.Web.xml",
-        "lib/netstandard2.1/System.Text.Encodings.Web.dll",
-        "lib/netstandard2.1/System.Text.Encodings.Web.xml",
-        "system.text.encodings.web.4.7.2.nupkg.sha512",
-        "system.text.encodings.web.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Text.Json/4.7.2": {
-      "sha512": "TcMd95wcrubm9nHvJEQs70rC0H/8omiSGGpU4FQ/ZA1URIqD4pjmFJh2Mfv1yH1eHgJDWTi2hMDXwTET+zOOyg==",
-      "type": "package",
-      "path": "system.text.json/4.7.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.Text.Json.dll",
-        "lib/net461/System.Text.Json.xml",
-        "lib/netcoreapp3.0/System.Text.Json.dll",
-        "lib/netcoreapp3.0/System.Text.Json.xml",
-        "lib/netstandard2.0/System.Text.Json.dll",
-        "lib/netstandard2.0/System.Text.Json.xml",
-        "system.text.json.4.7.2.nupkg.sha512",
-        "system.text.json.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
     "System.Text.RegularExpressions/4.3.0": {
       "sha512": "RpT2DA+L660cBt1FssIE9CAGpLFdFPuheB7pLpKpn6ZXNby7jDERe8Ua/Ne2xGiwLVG2JOqziiaVCGDon5sKFA==",
       "type": "package",
@@ -10226,8 +10069,7 @@
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 6.0.36",
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.36",
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.36",
-      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.18",
-      "OpenAI >= 2.0.0-beta.11"
+      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.18"
     ]
   },
   "packageFolders": {
@@ -10237,11 +10079,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\FitnessSalonYonetim\\FitnessSalonYonetim.csproj",
+      "projectUniqueName": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\fitnesssalonyonetim\\FitnessSalonYonetim.csproj",
       "projectName": "FitnessSalonYonetim",
-      "projectPath": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\FitnessSalonYonetim\\FitnessSalonYonetim.csproj",
+      "projectPath": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\fitnesssalonyonetim\\FitnessSalonYonetim.csproj",
       "packagesPath": "C:\\Users\\ferdi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\FitnessSalonYonetim\\obj\\",
+      "outputPath": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\fitnesssalonyonetim\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -10291,10 +10133,6 @@
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[6.0.18, )"
-          },
-          "OpenAI": {
-            "target": "Package",
-            "version": "[2.0.0-beta.11, )"
           }
         },
         "imports": [

@@ -31,12 +31,15 @@ namespace FitnessSalonYonetim.Models
         [Range(0, 500)]
         public decimal? Kilo { get; set; }
 
-        [StringLength(500)]
-        [Display(Name = "Adres")]
-        public string? Adres { get; set; }
+    [StringLength(500)]
+    [Display(Name = "Adres")]
+    public string? Adres { get; set; }
 
-        [Display(Name = "Kayıt Tarihi")]
-        public DateTime KayitTarihi { get; set; } = DateTime.Now;
+    [Display(Name = "Profil Resmi")]
+    public string? ProfilResmi { get; set; }
+
+    [Display(Name = "Kayıt Tarihi")]
+    public DateTime KayitTarihi { get; set; } = DateTime.Now;
 
         // Eğitmen İlişkisi (Eğer kullanıcı aynı zamanda eğitmense)
         [Display(Name = "Eğitmen")]

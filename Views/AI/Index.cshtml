@@ -20,6 +20,44 @@
                     <h5 class="mb-0 text-white"><i class="bi bi-person-check"></i> Kişisel Fitness Planı Oluştur</h5>
                 </div>
                 <div class="card-body">
+                    <!-- Kullanıcı Profil Özeti -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="d-flex align-items-center bg-light p-3 rounded">
+                                <div class="me-3">
+                                    @if (!string.IsNullOrEmpty(Model?.ProfilResmi))
+                                    {
+                                        <img src="@Model.ProfilResmi" alt="Profil" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white" style="width: 80px; height: 80px; font-size: 2rem;">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-1">@Model?.AdSoyad</h5>
+                                    <p class="mb-0 text-muted">
+                                        @if (Model?.Boy != null && Model?.Kilo != null)
+                                        {
+                                            <span>Boy: @Model.Boy cm | Kilo: @Model.Kilo kg</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Profil bilgilerinizi tamamlayın</span>
+                                        }
+                                    </p>
+                                </div>
+                                <div>
+                                    <a asp-controller="Account" asp-action="Profile" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i> Profili Düzenle
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <form id="aiForm" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -39,9 +77,9 @@
                                 <label for="cinsiyet" class="form-label"><i class="bi bi-gender-ambiguous"></i> Cinsiyet</label>
                                 <select class="form-select" id="cinsiyet" name="Cinsiyet" required>
                                     <option value="">Seçiniz</option>
-                                    <option value="Erkek">Erkek</option>
-                                    <option value="Kadın">Kadın</option>
-                                    <option value="Diğer">Diğer</option>
+                                    <option value="Erkek" selected="@(Model?.Cinsiyet == "Erkek" ? "selected" : null)">Erkek</option>
+                                    <option value="Kadın" selected="@(Model?.Cinsiyet == "Kadın" ? "selected" : null)">Kadın</option>
+                                    <option value="Diğer" selected="@(Model?.Cinsiyet == "Diğer" ? "selected" : null)">Diğer</option>
                                 </select>
                             </div>
 
@@ -81,12 +119,30 @@
                         <div class="mb-3">
                             <label for="foto" class="form-label"><i class="bi bi-camera"></i> Fotoğraf Yükle (Opsiyonel)</label>
                             <input type="file" class="form-control" id="foto" name="Foto" accept="image/*">
-                            <div class="form-text">Fotoğrafınızı yükleyerek daha kişiselleştirilmiş öneriler alabilirsiniz</div>
+                            <div class="form-text">
+                                Fotoğrafınızı yükleyerek analizlerinizi kayıt altına alabilirsiniz.
+                                @if (string.IsNullOrEmpty(Model?.ProfilResmi))
+                                {
+                                    <strong class="text-warning">Not:</strong> <span>Profil resminizi <a asp-controller="Account" asp-action="Profile">profil sayfanızdan</a> güncelleyebilirsiniz.</span>
+                                }
+                            </div>
                         </div>
 
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> <strong>Yapay Zeka Desteği:</strong>
-                            OpenAI API yapılandırıldıysa, GPT-4 ile kişiye özel detaylı öneriler oluşturulur.
+                        <!-- Fotoğraf Önizleme -->
+                        <div class="mb-3" id="photoPreview" style="display: none;">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <img id="previewImage" src="" alt="Önizleme" class="img-fluid rounded" style="max-height: 200px;">
+                                    <button type="button" class="btn btn-sm btn-danger mt-2" onclick="removePhoto()">
+                                        <i class="bi bi-trash"></i> Fotoğrafı Kaldır
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <i class="bi bi-robot"></i> <strong>Gömülü AI Modeli:</strong>
+                            Bilimsel formüller ve kural tabanlı yapay zeka ile kişiye özel detaylı öneriler oluşturulur.
                         </div>
 
                         <div class="d-grid">
@@ -99,80 +155,32 @@
             </div>
         </div>
 
-        <!-- Bilgi Paneli -->
-        <div class="col-md-4">
-            <!-- Nasıl Çalışır -->
-            <div class="card shadow mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Nasıl Çalışır?</h5>
-                </div>
-                <div class="card-body">
-                    <p>Yapay zeka destekli sistemimiz, kişisel bilgilerinizi analiz ederek size özel egzersiz programları önerir.</p>
-                    <hr>
-                    <p><strong>Özellikler:</strong></p>
-                    <ul class="small">
-                        <li>✅ BMI hesaplama</li>
-                        <li>✅ GPT-4 ile detaylı analizler</li>
-                        <li>✅ Kişiye özel egzersiz programı</li>
-                        <li>✅ Beslenme tavsiyeleri</li>
-                        <li>✅ Hedef odaklı planlar</li>
-                        <li>✅ Motivasyon görselleri</li>
-                    </ul>
-                </div>
+    <!-- Bilgi Paneli -->
+    <div class="col-md-4">
+        <!-- Nasıl Çalışır -->
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Nasıl Çalışır?</h5>
             </div>
-
-            <!-- Motivasyon Görseli Oluştur -->
-            <div class="card shadow">
-                <div class="card-header bg-gradient" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                    <h5 class="mb-0 text-white"><i class="bi bi-image"></i> Motivasyon Görseli</h5>
-                </div>
-                <div class="card-body">
-                    <form id="imageForm">
-                        <div class="mb-3">
-                            <label for="hedefVucutTipi" class="form-label">Hedef Vücut Tipi</label>
-                            <select class="form-select" id="hedefVucutTipi" name="HedefVucutTipi" required>
-                                <option value="">Seçiniz</option>
-                                <option value="Kaslı">💪 Kaslı</option>
-                                <option value="Zayıf">⚡ Zayıf ve Fit</option>
-                                <option value="Fit">❤️ Fit ve Sağlıklı</option>
-                                <option value="Atletik">🏃 Atletik</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="imageCinsiyet" class="form-label">Cinsiyet</label>
-                            <select class="form-select" id="imageCinsiyet" name="Cinsiyet" required>
-                                <option value="">Seçiniz</option>
-                                <option value="Erkek">Erkek</option>
-                                <option value="Kadın">Kadın</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="egzersizTuru" class="form-label">Egzersiz Türü</label>
-                            <select class="form-select" id="egzersizTuru" name="EgzersizTuru">
-                                <option value="">Seçiniz (Opsiyonel)</option>
-                                <option value="weightlifting">Ağırlık Kaldırma</option>
-                                <option value="running">Koşu</option>
-                                <option value="yoga">Yoga</option>
-                                <option value="crossfit">CrossFit</option>
-                                <option value="swimming">Yüzme</option>
-                            </select>
-                        </div>
-
-                        <div class="alert alert-warning small">
-                            <i class="bi bi-exclamation-triangle"></i> DALL-E 3 API gerektirir
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary" id="imageBtn">
-                                <i class="bi bi-stars"></i> Görsel Oluştur
-                            </button>
-                        </div>
-                    </form>
+            <div class="card-body">
+                <p>Gömülü yapay zeka modelimiz, bilimsel formüller kullanarak kişisel bilgilerinizi analiz eder ve size özel programlar oluşturur.</p>
+                <hr>
+                <p><strong>Model Özellikleri:</strong></p>
+                <ul class="small">
+                    <li>✅ BMI hesaplama ve analiz</li>
+                    <li>✅ Mifflin-St Jeor formülü ile kalori hesaplama</li>
+                    <li>✅ Kişiye özel egzersiz programı</li>
+                    <li>✅ Makro besin hedefleri</li>
+                    <li>✅ Haftalık detaylı plan</li>
+                    <li>✅ Motivasyon ve ipuçları</li>
+                </ul>
+                <hr>
+                <div class="alert alert-success small mb-0">
+                    <i class="bi bi-check-circle"></i> <strong>Avantaj:</strong> Harici API gerekmez, anında çalışır, ücretsizdir!
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Sonuç Kartı -->
@@ -189,29 +197,24 @@
         </div>
     </div>
 
-    <!-- Görsel Sonuç Kartı -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card shadow" id="imageResultCard" style="display: none;">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-image"></i> Motivasyon Görseliniz</h5>
-                </div>
-                <div class="card-body text-center">
-                    <img id="generatedImage" src="" alt="Motivasyon Görseli" class="img-fluid rounded shadow" style="max-height: 500px;">
-                    <div class="mt-3">
-                        <a id="downloadImage" href="" download="motivasyon.png" class="btn btn-success">
-                            <i class="bi bi-download"></i> İndir
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
+            // Fotoğraf önizleme
+            $('#foto').change(function() {
+                var file = this.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#previewImage').attr('src', e.target.result);
+                        $('#photoPreview').fadeIn();
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
             // Egzersiz Önerisi Formu
             $('#aiForm').submit(function (e) {
                 e.preventDefault();
@@ -248,42 +251,12 @@
                 });
             });
 
-            // Görsel Oluşturma Formu
-            $('#imageForm').submit(function (e) {
-                e.preventDefault();
-
-                var formData = new FormData(this);
-                var imageBtn = $('#imageBtn');
-                var originalText = imageBtn.html();
-
-                imageBtn.prop('disabled', true).html('<i class="bi bi-hourglass-split"></i> Görsel oluşturuluyor...');
-
-                $.ajax({
-                    url: '@Url.Action("GenerateMotivationImage", "AI")',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        imageBtn.prop('disabled', false).html(originalText);
-
-                        if (response.success && response.imageUrl) {
-                            $('#generatedImage').attr('src', response.imageUrl);
-                            $('#downloadImage').attr('href', response.imageUrl);
-                            $('#imageResultCard').fadeIn();
-                            $('html, body').animate({
-                                scrollTop: $("#imageResultCard").offset().top - 100
-                            }, 500);
-                        } else {
-                            alert('Hata: ' + (response.message || 'Görsel oluşturulamadı'));
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        imageBtn.prop('disabled', false).html(originalText);
-                        alert('Bir hata oluştu: ' + error);
-                    }
-                });
-            });
         });
+
+        // Fotoğraf kaldırma
+        function removePhoto() {
+            $('#foto').val('');
+            $('#photoPreview').fadeOut();
+        }
     </script>
 }

@@ -149,7 +149,7 @@ namespace FitnessSalonYonetim.Controllers
             antrenor.Aktif = !antrenor.Aktif;
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"{antrenor.AdSoyad} başarıyla {(antrenor.Aktif ? "aktif" : "pasif")} edildi.";
+            TempData["Success"] = $"{antrenor.AdSoyad} başarıyla {(antrenor.Aktif ? "aktif" : "pasif")} edildi.";
             return RedirectToAction(nameof(Egitmenler));
         }
 
@@ -195,6 +195,139 @@ namespace FitnessSalonYonetim.Controllers
             return View(uye);
         }
 
+        // Üye ekleme (GET)
+        [HttpGet]
+        public IActionResult UyeEkle()
+        {
+            return View(new RegisterViewModel());
+        }
+
+        // Üye ekleme (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UyeEkle(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Ad = model.Ad,
+                    Soyad = model.Soyad,
+                    KayitTarihi = DateTime.Now
+                };
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    // Member rolü ata
+                    await _userManager.AddToRoleAsync(user, "Member");
+                    
+                    TempData["Success"] = $"{user.AdSoyad} başarıyla eklendi.";
+                    return RedirectToAction(nameof(Uyeler));
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View(model);
+        }
+
+        // Üye düzenleme (GET)
+        [HttpGet]
+        public async Task<IActionResult> UyeDuzenle(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var uye = await _userManager.FindByIdAsync(id);
+            if (uye == null)
+            {
+                return NotFound();
+            }
+
+            // Admin kullanıcısını düzenlemeye izin verme
+            if (await _userManager.IsInRoleAsync(uye, "Admin"))
+            {
+                TempData["ErrorMessage"] = "Admin kullanıcısı düzenlenemez!";
+                return RedirectToAction(nameof(Uyeler));
+            }
+
+            var model = new ProfileViewModel
+            {
+                Ad = uye.Ad,
+                Soyad = uye.Soyad,
+                Email = uye.Email,
+                Telefon = uye.PhoneNumber,
+                DogumTarihi = uye.DogumTarihi,
+                Cinsiyet = uye.Cinsiyet,
+                Boy = uye.Boy,
+                Kilo = uye.Kilo,
+                Adres = uye.Adres,
+                ProfilResmi = uye.ProfilResmi
+            };
+
+            ViewBag.UserId = id;
+            return View(model);
+        }
+
+        // Üye düzenleme (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UyeDuzenle(string id, ProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.UserId = id;
+                return View(model);
+            }
+
+            var uye = await _userManager.FindByIdAsync(id);
+            if (uye == null)
+            {
+                return NotFound();
+            }
+
+            // Admin kullanıcısını düzenlemeye izin verme
+            if (await _userManager.IsInRoleAsync(uye, "Admin"))
+            {
+                TempData["ErrorMessage"] = "Admin kullanıcısı düzenlenemez!";
+                return RedirectToAction(nameof(Uyeler));
+            }
+
+            uye.Ad = model.Ad;
+            uye.Soyad = model.Soyad;
+            uye.PhoneNumber = model.Telefon;
+            uye.DogumTarihi = model.DogumTarihi;
+            uye.Cinsiyet = model.Cinsiyet;
+            uye.Boy = model.Boy;
+            uye.Kilo = model.Kilo;
+            uye.Adres = model.Adres;
+
+            var result = await _userManager.UpdateAsync(uye);
+
+            if (result.Succeeded)
+            {
+                TempData["Success"] = $"{uye.AdSoyad} başarıyla güncellendi.";
+                return RedirectToAction(nameof(Uyeler));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            ViewBag.UserId = id;
+            return View(model);
+        }
+
         // Üye silme
         [HttpPost]
         public async Task<IActionResult> UyeSil(string id)
@@ -215,7 +348,7 @@ namespace FitnessSalonYonetim.Controllers
             var result = await _userManager.DeleteAsync(uye);
             if (result.Succeeded)
             {
-                TempData["SuccessMessage"] = $"{uye.AdSoyad} başarıyla silindi.";
+                TempData["Success"] = $"{uye.AdSoyad} başarıyla silindi.";
             }
             else
             {
@@ -223,6 +356,164 @@ namespace FitnessSalonYonetim.Controllers
             }
 
             return RedirectToAction(nameof(Uyeler));
+        }
+
+        // Üye Şifre Değiştirme (GET)
+        [HttpGet]
+        public async Task<IActionResult> UyeSifreDegistir(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            var uye = await _userManager.FindByIdAsync(id);
+            if (uye == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.UserId = id;
+            ViewBag.UserName = uye.AdSoyad;
+            return View(new AdminChangePasswordViewModel());
+        }
+
+        // Üye Şifre Değiştirme (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UyeSifreDegistir(string id, AdminChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                ViewBag.UserId = id;
+                ViewBag.UserName = user?.AdSoyad;
+                return View(model);
+            }
+
+            var uye = await _userManager.FindByIdAsync(id);
+            if (uye == null)
+            {
+                return NotFound();
+            }
+
+            // Eski şifreyi sıfırla ve yeni şifre ata
+            var token = await _userManager.GeneratePasswordResetTokenAsync(uye);
+            var result = await _userManager.ResetPasswordAsync(uye, token, model.NewPassword);
+
+            if (result.Succeeded)
+            {
+                TempData["Success"] = $"{uye.AdSoyad} kullanıcısının şifresi başarıyla değiştirildi.";
+                return RedirectToAction(nameof(Uyeler));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            ViewBag.UserId = id;
+            ViewBag.UserName = uye.AdSoyad;
+            return View(model);
+        }
+
+        // Eğitmen ekleme (GET)
+        [HttpGet]
+        public async Task<IActionResult> EgitmenEkle()
+        {
+            ViewBag.Salonlar = await _context.Salonlar.Where(s => s.Aktif).ToListAsync();
+            return View(new Antrenor());
+        }
+
+        // Eğitmen ekleme (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EgitmenEkle(Antrenor model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.Aktif = true;
+                _context.Antrenorler.Add(model);
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = $"{model.AdSoyad} başarıyla eklendi.";
+                return RedirectToAction(nameof(Egitmenler));
+            }
+
+            ViewBag.Salonlar = await _context.Salonlar.Where(s => s.Aktif).ToListAsync();
+            return View(model);
+        }
+
+        // Eğitmen düzenleme (GET)
+        [HttpGet]
+        public async Task<IActionResult> EgitmenDuzenle(int id)
+        {
+            var antrenor = await _context.Antrenorler.FindAsync(id);
+            if (antrenor == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Salonlar = await _context.Salonlar.Where(s => s.Aktif).ToListAsync();
+            return View(antrenor);
+        }
+
+        // Eğitmen düzenleme (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EgitmenDuzenle(int id, Antrenor model)
+        {
+            if (id != model.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(model);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = $"{model.AdSoyad} başarıyla güncellendi.";
+                    return RedirectToAction(nameof(Egitmenler));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Antrenorler.Any(e => e.Id == id))
+                    {
+                        return NotFound();
+                    }
+                    throw;
+                }
+            }
+
+            ViewBag.Salonlar = await _context.Salonlar.Where(s => s.Aktif).ToListAsync();
+            return View(model);
+        }
+
+        // Eğitmen silme
+        [HttpPost]
+        public async Task<IActionResult> EgitmenSil(int id)
+        {
+            var antrenor = await _context.Antrenorler.FindAsync(id);
+            if (antrenor == null)
+            {
+                return NotFound();
+            }
+
+            // İlişkili randevuları kontrol et
+            var randevuVarMi = await _context.Randevular.AnyAsync(r => r.AntrenorId == id);
+            if (randevuVarMi)
+            {
+                TempData["ErrorMessage"] = "Bu eğitmene ait randevular olduğu için silinemez. Önce pasif yapabilirsiniz.";
+                return RedirectToAction(nameof(Egitmenler));
+            }
+
+            _context.Antrenorler.Remove(antrenor);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"{antrenor.AdSoyad} başarıyla silindi.";
+            return RedirectToAction(nameof(Egitmenler));
         }
     }
 }

@@ -7,12 +7,15 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-person-badge"></i> Üye Yönetimi</h1>
+        <a asp-action="UyeEkle" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Yeni Üye Ekle
+        </a>
     </div>
 
-    @if (TempData["SuccessMessage"] != null)
+    @if (TempData["Success"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["SuccessMessage"]
+            @TempData["Success"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
@@ -122,6 +125,12 @@
                                             </a>
                                             @if (!isAdmin)
                                             {
+                                                <a asp-action="UyeDuzenle" asp-route-id="@uye.Id" class="btn btn-sm btn-warning" title="Düzenle">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a asp-action="UyeSifreDegistir" asp-route-id="@uye.Id" class="btn btn-sm btn-secondary" title="Şifre Değiştir">
+                                                    <i class="bi bi-key"></i>
+                                                </a>
                                                 <form asp-action="UyeSil" asp-route-id="@uye.Id" method="post" class="d-inline" onsubmit="return confirm('Bu üyeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!');">
                                                     @Html.AntiForgeryToken()
                                                     <button type="submit" class="btn btn-sm btn-danger" title="Sil">

@@ -346,6 +346,46 @@ namespace FitnessSalonYonetim.Controllers
             
             return RedirectToAction(nameof(Randevular));
         }
+
+        // Şifre Değiştirme (GET)
+        [HttpGet]
+        public IActionResult SifreDegistir()
+        {
+            return View();
+        }
+
+        // Şifre Değiştirme (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SifreDegistir(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+                TempData["Success"] = "Şifreniz başarıyla değiştirildi.";
+                return RedirectToAction(nameof(Profil));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
+        }
     }
 }
 

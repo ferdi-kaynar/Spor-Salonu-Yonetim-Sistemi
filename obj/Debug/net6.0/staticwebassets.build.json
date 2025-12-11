@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "812tdgtIJWhflaGGpv7cCwy3tMwtiM45AK8MftChC/s=",
+  "Hash": "IF8oCj7th8aCNlYTEYSsmvn4nrpBsWpugjeLITg7uek=",
   "Source": "FitnessSalonYonetim",
   "BasePath": "_content/FitnessSalonYonetim",
   "Mode": "Default",
@@ -1069,6 +1069,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\fitnesssalonyonetim\\wwwroot\\uploads\\ai\\d4e6d38a-fa33-431b-a76b-788e40060aac_20251211045437.jpg",
+      "SourceId": "FitnessSalonYonetim",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\fitnesssalonyonetim\\wwwroot\\",
+      "BasePath": "_content/FitnessSalonYonetim",
+      "RelativePath": "uploads/ai/d4e6d38a-fa33-431b-a76b-788e40060aac_20251211045437.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\ai\\d4e6d38a-fa33-431b-a76b-788e40060aac_20251211045437.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\fitnesssalonyonetim\\wwwroot\\uploads\\profiles\\d4e6d38a-fa33-431b-a76b-788e40060aac_20251211045409.jpg",
+      "SourceId": "FitnessSalonYonetim",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\ferdi\\OneDrive\\Masaüstü\\Spor Salonu Yonetim ve Randevu Sistemi\\fitnesssalonyonetim\\wwwroot\\",
+      "BasePath": "_content/FitnessSalonYonetim",
+      "RelativePath": "uploads/profiles/d4e6d38a-fa33-431b-a76b-788e40060aac_20251211045409.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\profiles\\d4e6d38a-fa33-431b-a76b-788e40060aac_20251211045409.jpg"
     }
   ]
 }

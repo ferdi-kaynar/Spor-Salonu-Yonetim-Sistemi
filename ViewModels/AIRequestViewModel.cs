@@ -25,26 +25,12 @@ namespace FitnessSalonYonetim.ViewModels
         public IFormFile? Foto { get; set; }
     }
 
-    public class AIImageGenerationViewModel
-    {
-        [Required(ErrorMessage = "Hedef vücut tipi seçimi zorunludur.")]
-        public string HedefVucutTipi { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "Cinsiyet seçimi zorunludur.")]
-        public string Cinsiyet { get; set; } = string.Empty;
-
-        public string? EgzersizTuru { get; set; }
-
-        public int? Sure { get; set; } // Kaç ay sonra
-    }
 
     public class AIResponseViewModel
     {
         public bool Success { get; set; }
         public string? Message { get; set; }
         public string? OneriHTML { get; set; }
-        public string? ImageUrl { get; set; }
-        public string? ImagePrompt { get; set; }
     }
 }
 

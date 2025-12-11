@@ -7,15 +7,15 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-people"></i> Eğitmen Yönetimi</h1>
-        <a asp-controller="Antrenor" asp-action="Create" class="btn btn-success">
+        <a asp-action="EgitmenEkle" class="btn btn-success">
             <i class="bi bi-plus-circle"></i> Yeni Eğitmen Ekle
         </a>
     </div>
 
-    @if (TempData["SuccessMessage"] != null)
+    @if (TempData["Success"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["SuccessMessage"]
+            @TempData["Success"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
@@ -108,13 +108,19 @@
                                             <a asp-controller="Antrenor" asp-action="Details" asp-route-id="@antrenor.Id" class="btn btn-sm btn-info" title="Detaylar">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a asp-controller="Antrenor" asp-action="Edit" asp-route-id="@antrenor.Id" class="btn btn-sm btn-warning" title="Düzenle">
+                                            <a asp-action="EgitmenDuzenle" asp-route-id="@antrenor.Id" class="btn btn-sm btn-warning" title="Düzenle">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form asp-action="ToggleEgitmen" asp-route-id="@antrenor.Id" method="post" class="d-inline" onsubmit="return confirm('Eğitmenin durumunu değiştirmek istediğinizden emin misiniz?');">
+                                            <form asp-action="ToggleEgitmen" asp-route-id="@antrenor.Id" method="post" class="d-inline me-1" onsubmit="return confirm('Eğitmenin durumunu değiştirmek istediğinizden emin misiniz?');">
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-sm @(antrenor.Aktif ? "btn-danger" : "btn-success")" title="@(antrenor.Aktif ? "Pasif Et" : "Aktif Et")">
+                                                <button type="submit" class="btn btn-sm @(antrenor.Aktif ? "btn-secondary" : "btn-success")" title="@(antrenor.Aktif ? "Pasif Et" : "Aktif Et")">
                                                     <i class="bi bi-toggle-@(antrenor.Aktif ? "off" : "on")"></i>
+                                                </button>
+                                            </form>
+                                            <form asp-action="EgitmenSil" asp-route-id="@antrenor.Id" method="post" class="d-inline" onsubmit="return confirm('Bu eğitmeni silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Sil">
+                                                    <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
                                         </div>
@@ -130,7 +136,7 @@
                 <div class="text-center py-5">
                     <i class="bi bi-inbox" style="font-size: 4rem; color: #ccc;"></i>
                     <p class="text-muted mt-3">Henüz eğitmen bulunmamaktadır.</p>
-                    <a asp-controller="Antrenor" asp-action="Create" class="btn btn-primary">
+                    <a asp-action="EgitmenEkle" class="btn btn-primary">
                         <i class="bi bi-plus-circle"></i> İlk Eğitmeni Ekle
                     </a>
                 </div>
