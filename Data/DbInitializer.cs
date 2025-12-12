@@ -1,4 +1,4 @@
-
+using FitnessSalonYonetim.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace FitnessSalonYonetim.Data
