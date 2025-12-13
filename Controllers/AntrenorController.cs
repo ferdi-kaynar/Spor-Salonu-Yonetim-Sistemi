@@ -1,4 +1,4 @@
-
+using FitnessSalonYonetim.Data;
 using FitnessSalonYonetim.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
