@@ -45,7 +45,7 @@ Controllers/ Models/ Views/ Data/ wwwroot/
 ## Geliştirme
 
 ```bash
-dotnet ef migrations add [Name]
+dotnet ef migrations add 
 dotnet ef database update
 ```
 
