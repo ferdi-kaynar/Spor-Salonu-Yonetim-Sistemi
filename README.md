@@ -23,6 +23,7 @@ cd FitnessSalonYonetim
 dotnet restore
 dotnet ef database update
 dotnet run
+admin giriş: admin@gmail.com şifre 123456
 ```
 
 
